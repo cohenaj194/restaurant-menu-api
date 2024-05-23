@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: restaurant-menu-api-config
+data:
+  NODE_ENV: production
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: restaurant-menu-api-secret
+type: Opaque
+data:
+  # Example secret data, base64 encoded
+  API_KEY: YXBpX2tleV92YWx1ZQ==
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: restaurant-menu-api-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: restaurant-menu-api
+  template:
+    metadata:
+      labels:
+        app: restaurant-menu-api
+    spec:
+      containers:
+      - name: restaurant-menu-api
+        image: restaurant-menu-api:latest
+        ports:
+        - containerPort: 4000
+        env:
+        - name: NODE_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: restaurant-menu-api-config
+              key: NODE_ENV
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: restaurant-menu-api-secret
+              key: API_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: restaurant-menu-api-service
+spec:
+  selector:
+    app: restaurant-menu-api
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 4000
+  type: LoadBalancer
