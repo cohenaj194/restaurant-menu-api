@@ -49,5 +49,5 @@ jobs:
 
     - name: Rollout Restart Deployment
       run: |
-        kubectl apply -f kubemanifest.yml --kubeconfig kubeconfig
+        kubectl apply -f kube-service.yml --kubeconfig kubeconfig
         kubectl rollout restart deployment restaurant-menu-api --kubeconfig kubeconfig
