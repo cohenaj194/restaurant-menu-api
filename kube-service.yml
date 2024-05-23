@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
       - name: restaurant-menu-api
-        image: restaurant-menu-api:latest
+        image: cohenaj194/restaurant-menu-api:latest
         ports:
         - containerPort: 4000
         env:
